@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_marginTop="10dp"
+    android:id="@+id/layoutItemListOder"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff">
+
+    <ImageView
+        android:id="@+id/imgItemOderMotor"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:src="@drawable/scooter"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/txtListOderLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chung cư khánh hội 2"
+        android:textColor="#39383a"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imgItemOderMotor"/>
+
+    <TextView
+        android:id="@+id/txtListOderStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chuyến đi đã hoàn thành"
+        android:textColor="#9d9c9d"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/txtListOderLocation"
+        app:layout_constraintStart_toEndOf="@id/imgItemOderMotor"/>
+
+    <TextView
+        android:id="@+id/txtListOderTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hôm nay, 8:50 am"
+        android:textColor="#ccc"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/txtListOderStatus"
+        app:layout_constraintStart_toEndOf="@id/imgItemOderMotor"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#bbbcbf"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/txtListOderTime"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
