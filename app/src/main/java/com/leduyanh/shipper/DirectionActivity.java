@@ -11,8 +11,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 
 import android.widget.Button;
@@ -51,9 +49,9 @@ import java.util.List;
 public class DirectionActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final int LOCATION_REQUEST = 500;
 
-    public static int  STATUS_DRIRECTION_RESTAURANT = 1;
-    public static int  STATUS_DRIRECTION_CUSTOMER = 2;
-    public static int  STATUS_DRIRECTION_DONE = 3;
+    public static int STATUS_DRIRECTION_RESTAURANT = 1;
+    public static int STATUS_DRIRECTION_CUSTOMER = 2;
+    public static int STATUS_DRIRECTION_DONE = 3;
 
     int status = STATUS_DRIRECTION_RESTAURANT;
 
@@ -72,7 +70,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_direction);
 
-        btnChangeStatus = (Button)findViewById(R.id.btnChangeStatus);
+        btnChangeStatus = (Button) findViewById(R.id.btnChangeStatus);
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -105,11 +103,11 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         btnChangeStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(status == STATUS_DRIRECTION_RESTAURANT){
+                if (status == STATUS_DRIRECTION_RESTAURANT) {
                     showDirectionResult("linh dam, ha noi");
                     btnChangeStatus.setText("Đã tới nhà hàng");
                     status = STATUS_DRIRECTION_CUSTOMER;
-                }else if(status == STATUS_DRIRECTION_CUSTOMER){
+                } else if (status == STATUS_DRIRECTION_CUSTOMER) {
                     showDirectionResult("tran dai nghia, ha noi");
                     btnChangeStatus.setText("Đã giao hàng");
                     status = STATUS_DRIRECTION_DONE;
@@ -233,22 +231,22 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         return url;
     }
 
-    private void showDirectionResult(String sEndPoint){
+    private void showDirectionResult(String sEndPoint) {
         List<Address> addressesEnd = null;
-        try{
-            addressesEnd = geocoder.getFromLocationName(sEndPoint,1);
-        }catch (IOException e){
+        try {
+            addressesEnd = geocoder.getFromLocationName(sEndPoint, 1);
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if(addressesEnd.size()>0){
+        if (addressesEnd.size() > 0) {
             LatLng startPoint = getLatLngCurrentLocation();
 
             double latEnd = addressesEnd.get(0).getLatitude();
             double lonEnd = addressesEnd.get(0).getLongitude();
-            LatLng endPoint = new LatLng(latEnd,lonEnd);
+            LatLng endPoint = new LatLng(latEnd, lonEnd);
 
-            String url = getRequestUrl(startPoint,endPoint);
+            String url = getRequestUrl(startPoint, endPoint);
             new TaskRequestDirections().execute(url);
 
             mMap.clear();
@@ -266,21 +264,26 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                     .include(endPoint)
                     .build();
             int padding = 200;
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,padding);
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
             mMap.animateCamera(cu);
 
         }
     }
 
+
     public LatLng getLatLngCurrentLocation() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         checkPermission();
-        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-        double lat = location.getLatitude();
-        double lng = location.getLongitude();
+        //Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
 
-        LatLng latLng = new LatLng(lat,lng);
+//        double lat = location.getLatitude();
+//        double lng = location.getLongitude();
+
+        double lat1 = 20.959800000000005;
+        double lng1 = 105.84799833333334;
+
+        LatLng latLng = new LatLng(lat1,lng1);
         return latLng;
     }
 

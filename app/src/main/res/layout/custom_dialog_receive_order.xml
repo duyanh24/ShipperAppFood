@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingEnd="20dp"
+    android:paddingStart="20dp"
+    android:background="#fff"
+    >
+
+    <TextView
+        android:id="@+id/txtListOderTitle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Bạn có đơn hàng mới"
+        android:textColor="@color/colorBlack"
+        android:gravity="center"
+        android:textSize="18sp"/>
+
+    <View
+        android:id="@+id/divier"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ccc"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtOderDetailTitleRestau"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên nhà hàng"
+            android:textStyle="bold"
+            android:textColor="#0c22bb"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:id="@+id/txtOderDetailRestau"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Starbucks Hai, Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nôi."
+            android:textStyle="bold"
+            android:textColor="#575657"
+            android:textSize="14sp"
+            android:layout_marginTop="5dp"/>
+
+        <TextView
+            android:id="@+id/txtOderDetailTitleCustomer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gửi đến"
+            android:textStyle="bold"
+            android:textColor="#b5bb09"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"/>
+
+        <TextView
+            android:id="@+id/txtOderDetailCustomer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Khu nhà ở sinh viên Pháp Vân, Tứ Hiệp, Hoàng Liệt Hoàng Mai, Hà Nội"
+            android:textStyle="bold"
+            android:textColor="#575657"
+            android:textSize="14sp"
+            android:layout_marginTop="5dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="TỔNG TIỀN"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorBlack"
+                    android:text="120.000 VNĐ"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="50dp"
+                android:background="#ccc"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="THANH TOÁN"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorBlack"
+                    android:text="Tiền mặt"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

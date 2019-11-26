@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingEnd="20dp"
+    android:paddingStart="20dp"
+    android:background="#fff"
+    >
+
+    <TextView
+        android:id="@+id/txtListOderTitle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Đổi mật khẩu"
+        android:textColor="@color/colorBlack"
+        android:gravity="center"
+        android:textSize="18sp"/>
+
+    <View
+        android:id="@+id/divier"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ccc"/>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tipCurrentPassword"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp">
+        
+        <EditText
+            android:id="@+id/txtCurrentPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:inputType="textPassword"
+            android:hint="Mật khẩu hiện tại"
+            android:textColor="@color/colorBlack"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ccc"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tipNewPassword"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp">
+
+        <EditText
+            android:id="@+id/txtNewPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:inputType="textPassword"
+            android:hint="Mật khẩu mới"
+            android:textColor="@color/colorBlack"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ccc"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tipConfirmPassword"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp">
+
+        <EditText
+            android:id="@+id/txtConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Nhập lại mật khẩu mới"
+            android:inputType="textPassword"
+            android:textColor="@color/colorBlack"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ccc"/>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btnComfirmChangePass"
+            android:layout_margin="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Xác nhận"
+            android:textSize="18sp"
+            android:textColor="@color/colorWhite"
+            android:background="#09D312"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/btnDestroyChangePass"
+            android:layout_margin="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Hủy"
+            android:textSize="18sp"
+            android:textColor="@color/colorWhite"
+            android:background="#FD1706"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+</LinearLayout>
