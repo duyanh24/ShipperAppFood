@@ -27,6 +27,7 @@
         android:text="Họ và tên"/>
 
     <TextView
+        android:id="@+id/txtProfileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nguyễn văn a"
@@ -45,6 +46,7 @@
         android:text="Email"/>
 
     <TextView
+        android:id="@+id/txtProfileEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="gmail@gmail.com"
@@ -63,6 +65,7 @@
         android:text="Số điện thoại"/>
 
     <TextView
+        android:id="@+id/txtProfilePhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0562861618"
@@ -81,6 +84,7 @@
         android:text="CMND"/>
 
     <TextView
+        android:id="@+id/txtProfileIdent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="182859265356265"
@@ -118,6 +122,7 @@
         android:layout_marginEnd="20dp"/>
 
     <TextView
+        android:id="@+id/txtBtnLogout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="Đăng xuất"

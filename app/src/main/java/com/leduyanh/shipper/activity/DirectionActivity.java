@@ -1,4 +1,4 @@
-package com.leduyanh.shipper;
+package com.leduyanh.shipper.activity;
 
 import android.Manifest;
 import android.content.Context;
@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.leduyanh.shipper.R;
 import com.leduyanh.shipper.utils.DirectionsParser;
 
 import org.json.JSONException;

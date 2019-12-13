@@ -1,4 +1,4 @@
-package com.leduyanh.shipper;
+package com.leduyanh.shipper.activity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.leduyanh.shipper.R;
 import com.leduyanh.shipper.adapter.AdapterRecycOrderDetail;
 
 import java.util.ArrayList;

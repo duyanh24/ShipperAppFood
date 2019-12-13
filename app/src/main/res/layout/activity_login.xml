@@ -7,7 +7,7 @@
     android:background="#fff"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
-    tools:context=".LogInActivity">
+    tools:context=".activity.LogInActivity">
 
     <ImageView
         android:id="@+id/imgLoginLogo"

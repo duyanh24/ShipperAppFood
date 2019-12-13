@@ -1,4 +1,4 @@
-package com.leduyanh.shipper;
+package com.leduyanh.shipper.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -12,15 +12,27 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.leduyanh.shipper.R;
 import com.leduyanh.shipper.fragment.FragmentCurrentOrder;
 import com.leduyanh.shipper.fragment.FragmentHome;
 import com.leduyanh.shipper.fragment.FragmentListOrder;
 import com.leduyanh.shipper.fragment.FragmentProfile;
+import com.leduyanh.shipper.model.Shipper;
+import com.leduyanh.shipper.model.api.RetrofitClient;
+import com.leduyanh.shipper.model.api.SOSerivce;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,12 +42,17 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     FragmentManager fragmentManager = getSupportFragmentManager();
 
+    SOSerivce mSoSerivce;
+
+    public static Boolean CHECK = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         init();
+        mSoSerivce = RetrofitClient.getClient().create(SOSerivce.class);
 
         FragmentHome fragmentHome = new FragmentHome();
         moveScreen(fragmentHome,"home");
@@ -49,15 +66,24 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                showMessageNewOrder();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.setRefreshing(false);
-                    }
-                },1000);
+
+
+
             }
         });
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Do something after 100ms
+                if(!CHECK){
+                    callApiGetCurrentOrder();
+                    CHECK = true;
+                }
+                handler.postDelayed(this, 5000);
+            }
+        }, 1500);
     }
 
     private void init() {
@@ -74,8 +100,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.linearHome:
-                FragmentHome fragmentHome = new FragmentHome();
-                moveScreen(fragmentHome,"home");
+                if(CHECK){
+                    FragmentCurrentOrder fragmentHome = new FragmentCurrentOrder();
+                    moveScreen(fragmentHome,"home");
+                }else{
+                    FragmentHome fragmentHome = new FragmentHome();
+                    moveScreen(fragmentHome,"home");
+                }
                 changeColorMenu(txtMenuHome);
                 break;
             case R.id.linearHomeListOrder:
@@ -91,16 +122,71 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void showMessageNewOrder() {
+
+    public void callApiGetCurrentOrder(){
+//        Call<List<Shipper>> call = mSoSerivce.checkUser();
+//        call.enqueue(new Callback<List<Shipper>>() {
+//            @Override
+//            public void onResponse(Call<List<Shipper>> call, Response<List<Shipper>> response) {
+//                List<Shipper> user = response.body();
+//                if (user.size() != 0){
+//                    showMessageNewOrder(user.get(0).getId());
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            refreshLayout.setRefreshing(false);
+//                        }
+//                    },500);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Shipper>> call, Throwable t) {
+//                Toast.makeText(HomeActivity.this,"Lỗi kết nối",Toast.LENGTH_SHORT).show();
+//                Log.d("bug2",t.getMessage());
+//            }
+//        });
+    }
+
+    private void showMessageNewOrder(int id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
 
         LayoutInflater inflater = this.getLayoutInflater();
         View viewDialog = inflater.inflate(R.layout.custom_dialog_receive_order,null);
+        final TextView txtOrderCurrentRestau = viewDialog.findViewById(R.id.txtOderDetailRestau);
+        final TextView txtOderDetailCustomer = viewDialog.findViewById(R.id.txtOderDetailCustomer);
+
+//        mSoSerivce.getEmployeeById(id).enqueue(new Callback<Shipper>() {
+//            @Override
+//            public void onResponse(Call<Shipper> call, Response<Shipper> response) {
+//                Shipper shipper = response.body();
+//                txtOrderCurrentRestau.setText(shipper.getEmail());
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Shipper> call, Throwable t) {
+//
+//            }
+//        });
+
+//        mSoSerivce.getEmployeeById(id).enqueue(new Callback<Shipper>() {
+//            @Override
+//            public void onResponse(Call<Shipper> call, Response<Shipper> response) {
+//                Shipper shipper = response.body();
+//                txtOderDetailCustomer.setText(shipper.getPassword());
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Shipper> call, Throwable t) {
+//
+//            }
+//        });
+
         builder.setView(viewDialog)
                 .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        CHECK = false;
                     }
                 })
                 .setPositiveButton("Nhận", new DialogInterface.OnClickListener() {

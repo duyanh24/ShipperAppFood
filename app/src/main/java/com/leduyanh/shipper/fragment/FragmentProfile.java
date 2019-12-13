@@ -1,6 +1,10 @@
 package com.leduyanh.shipper.fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +17,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.leduyanh.shipper.R;
+import com.leduyanh.shipper.activity.LogInActivity;
+import com.leduyanh.shipper.activity.MainActivity;
+import com.leduyanh.shipper.model.ShipperRespone;
+import com.leduyanh.shipper.model.api.RetrofitClient;
+import com.leduyanh.shipper.model.api.SOSerivce;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FragmentProfile extends Fragment{
-    TextView txtChangePass,txtCurrentPass,txtNewPass,txtComfirmPass;
+    TextView txtChangePass,txtCurrentPass,txtNewPass,txtComfirmPass,txtLogout;
+    TextView txtName, txtEmail, txtPhone, txtIdent;
+
     Button btnComfirmChangePass, btnDestroyChangePass;
 
     View view;
@@ -23,11 +38,14 @@ public class FragmentProfile extends Fragment{
 
     AlertDialog.Builder builder;
 
+    SOSerivce mSoSerivce;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile,container,false);
         init();
+        mSoSerivce = RetrofitClient.getClient().create(SOSerivce.class);
 
         txtChangePass.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,11 +53,44 @@ public class FragmentProfile extends Fragment{
                 showDialogChangePass();
             }
         });
+
+        txtLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
+        getInfoShipper();
         return view;
     }
 
     public void init(){
         txtChangePass = (TextView)view.findViewById(R.id.txtProfileChangePass);
+        txtLogout = (TextView)view.findViewById(R.id.txtBtnLogout);
+        txtName = (TextView)view.findViewById(R.id.txtProfileName);
+        txtEmail = (TextView)view.findViewById(R.id.txtProfileEmail);
+        txtPhone = (TextView)view.findViewById(R.id.txtProfilePhone);
+        txtIdent = (TextView)view.findViewById(R.id.txtProfileIdent);
+    }
+
+    public void getInfoShipper(){
+        SharedPreferences tokenCache = getActivity().getSharedPreferences("token", Context.MODE_PRIVATE);
+        String token = tokenCache.getString("token","");
+        mSoSerivce.getInfoShipper(token,5).enqueue(new Callback<ShipperRespone>() {
+            @Override
+            public void onResponse(Call<ShipperRespone> call, Response<ShipperRespone> response) {
+                ShipperRespone result = response.body();
+                txtName.setText(result.getData().getName());
+                txtEmail.setText(result.getData().getEmail());
+                txtPhone.setText(String.valueOf(result.getData().getPhone()));
+                txtIdent.setText(result.getData().getIdentification());
+            }
+
+            @Override
+            public void onFailure(Call<ShipperRespone> call, Throwable t) {
+                Toast.makeText(getActivity(),"Lỗi kết nối",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void showDialogChangePass() {
@@ -107,5 +158,31 @@ public class FragmentProfile extends Fragment{
         }else{
             return false;
         }
+    }
+
+    public void logout(){
+        AlertDialog.Builder builderMessage = new AlertDialog.Builder(getActivity());
+
+        builderMessage.setTitle("Bạn có muốn đăng xuất?")
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setPositiveButton("Đăng xuất", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences tokenCache = getActivity().getSharedPreferences("token", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = tokenCache.edit();
+                        editor.putString("token","");
+                        editor.commit();
+
+                        Intent intentLogout = new Intent(getActivity(),LogInActivity.class);
+                        startActivity(intentLogout);
+                        getActivity().finish();
+                    }
+                });
+        builderMessage.create().show();
     }
 }

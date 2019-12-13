@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.leduyanh.shipper.DirectionActivity;
+import com.leduyanh.shipper.activity.DirectionActivity;
 import com.leduyanh.shipper.R;
 import com.leduyanh.shipper.adapter.AdapterRecycOrderDetail;
 import com.leduyanh.shipper.adapter.RecyclerViewOrderItem;
