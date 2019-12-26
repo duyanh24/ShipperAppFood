@@ -1,14 +1,16 @@
-package com.leduyanh.shipper.model;
+package com.leduyanh.shipper.model.order;
 
 import com.google.gson.annotations.SerializedName;
+import com.leduyanh.shipper.model.order.DataOrder;
 
-public class ShipperRespone {
+import java.util.List;
 
+public class Order {
     @SerializedName("success")
     Boolean success;
 
     @SerializedName("data")
-    Data data;
+    List<DataOrder> data;
 
     public Boolean getSuccess() {
         return success;
@@ -18,12 +20,11 @@ public class ShipperRespone {
         this.success = success;
     }
 
-    public Data getData() {
+    public List<DataOrder> getData() {
         return data;
     }
 
-    public void setData(Data data) {
+    public void setData(List<DataOrder> data) {
         this.data = data;
     }
 }
-

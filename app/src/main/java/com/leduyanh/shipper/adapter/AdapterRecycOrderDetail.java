@@ -11,14 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.leduyanh.shipper.R;
+import com.leduyanh.shipper.model.orderdetail.DataOrderDetail;
 
 import java.util.List;
 
 public class AdapterRecycOrderDetail extends RecyclerView.Adapter<AdapterRecycOrderDetail.OrderDetailViewHolder> {
-    List<String> listItem;
+    List<DataOrderDetail> listItem;
     Context mContext;
 
-    public AdapterRecycOrderDetail(List<String> listItem, Context mContext) {
+    public AdapterRecycOrderDetail(List<DataOrderDetail> listItem, Context mContext) {
         this.listItem = listItem;
         this.mContext = mContext;
     }
@@ -33,7 +34,9 @@ public class AdapterRecycOrderDetail extends RecyclerView.Adapter<AdapterRecycOr
 
     @Override
     public void onBindViewHolder(@NonNull OrderDetailViewHolder holder, int position) {
-
+        holder.txtName.setText(listItem.get(position).getDish().getName());
+        holder.txtCount.setText(String.valueOf(listItem.get(position).getQuantity()));
+        holder.txtPrice.setText(String.valueOf(listItem.get(position).getCurrent_price()));
     }
 
     @Override
@@ -51,6 +54,7 @@ public class AdapterRecycOrderDetail extends RecyclerView.Adapter<AdapterRecycOr
             imgItem = (ImageView)itemView.findViewById(R.id.imgItemOderDetail);
             txtName = (TextView)itemView.findViewById(R.id.txtItemOderDetailName);
             txtCount = (TextView)itemView.findViewById(R.id.txtItemOderDetailCount);
+            txtPrice = (TextView)itemView.findViewById(R.id.txtItemOderDetailPrice);
         }
     }
 }

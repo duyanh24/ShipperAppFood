@@ -14,11 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leduyanh.shipper.R;
-import com.leduyanh.shipper.model.Shipper;
-import com.leduyanh.shipper.model.api.RetrofitClient;
-import com.leduyanh.shipper.model.api.SOSerivce;
-
-import java.util.List;
+import com.leduyanh.shipper.model.shipper.Shipper;
+import com.leduyanh.shipper.api.RetrofitClient;
+import com.leduyanh.shipper.api.SOSerivce;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -77,9 +75,12 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     Intent intentHome = new Intent(LogInActivity.this,HomeActivity.class);
                     startActivity(intentHome);
 
-                    SharedPreferences tokenCache = LogInActivity.this.getSharedPreferences("token",Context.MODE_PRIVATE);
+                    SharedPreferences tokenCache = LogInActivity.this.getSharedPreferences("infoShipper",Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = tokenCache.edit();
                     editor.putString("token","Bearer "+resultLogin.getToken());
+                    String idShipper = String.valueOf(resultLogin.getData().getId());
+                    editor.putString("id",idShipper);
+                    Log.d("testtoken2",idShipper);
                     editor.commit();
 
                     finish();

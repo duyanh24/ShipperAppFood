@@ -17,11 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.leduyanh.shipper.R;
+import com.leduyanh.shipper.activity.HomeActivity;
 import com.leduyanh.shipper.activity.LogInActivity;
-import com.leduyanh.shipper.activity.MainActivity;
-import com.leduyanh.shipper.model.ShipperRespone;
-import com.leduyanh.shipper.model.api.RetrofitClient;
-import com.leduyanh.shipper.model.api.SOSerivce;
+import com.leduyanh.shipper.model.shipper.Shipper;
+import com.leduyanh.shipper.api.RetrofitClient;
+import com.leduyanh.shipper.api.SOSerivce;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -74,21 +74,26 @@ public class FragmentProfile extends Fragment{
     }
 
     public void getInfoShipper(){
-        SharedPreferences tokenCache = getActivity().getSharedPreferences("token", Context.MODE_PRIVATE);
+        SharedPreferences tokenCache = getActivity().getSharedPreferences("infoShipper", Context.MODE_PRIVATE);
         String token = tokenCache.getString("token","");
-        mSoSerivce.getInfoShipper(token,5).enqueue(new Callback<ShipperRespone>() {
+        int idShipper = Integer.parseInt(tokenCache.getString("id",""));
+
+        mSoSerivce.getInfoShipper(token,idShipper).enqueue(new Callback<Shipper>() {
             @Override
-            public void onResponse(Call<ShipperRespone> call, Response<ShipperRespone> response) {
-                ShipperRespone result = response.body();
-                txtName.setText(result.getData().getName());
-                txtEmail.setText(result.getData().getEmail());
-                txtPhone.setText(String.valueOf(result.getData().getPhone()));
-                txtIdent.setText(result.getData().getIdentification());
+            public void onResponse(Call<Shipper> call, Response<Shipper> response) {
+                Shipper result = response.body();
+                if(result != null){
+                    txtName.setText(result.getData().getName());
+                    txtEmail.setText(result.getData().getEmail());
+                    txtPhone.setText(String.valueOf(result.getData().getPhone()));
+                    txtIdent.setText(result.getData().getIdentification());
+                }
             }
 
             @Override
-            public void onFailure(Call<ShipperRespone> call, Throwable t) {
+            public void onFailure(Call<Shipper> call, Throwable t) {
                 Toast.makeText(getActivity(),"Lỗi kết nối",Toast.LENGTH_SHORT).show();
+
             }
         });
     }
@@ -173,14 +178,7 @@ public class FragmentProfile extends Fragment{
                 .setPositiveButton("Đăng xuất", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences tokenCache = getActivity().getSharedPreferences("token", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = tokenCache.edit();
-                        editor.putString("token","");
-                        editor.commit();
-
-                        Intent intentLogout = new Intent(getActivity(),LogInActivity.class);
-                        startActivity(intentLogout);
-                        getActivity().finish();
+                        ((HomeActivity)getContext()).logOut();
                     }
                 });
         builderMessage.create().show();

@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
                 }catch (Exception e){
 
                 }finally {
-                    SharedPreferences tokenCache = MainActivity.this.getSharedPreferences("token", Context.MODE_PRIVATE);
+                    SharedPreferences tokenCache = MainActivity.this.getSharedPreferences("infoShipper", Context.MODE_PRIVATE);
                     String token = tokenCache.getString("token","");
                     if(token.equals("") || token.equals(null)){
                         Intent intentLogin = new Intent(MainActivity.this, LogInActivity.class);

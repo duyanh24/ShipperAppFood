@@ -105,13 +105,13 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onClick(View view) {
                 if (status == STATUS_DRIRECTION_RESTAURANT) {
-                    showDirectionResult("linh dam, ha noi");
-                    btnChangeStatus.setText("Đã tới nhà hàng");
+                    showDirectionResult("tran dai nghia, ha noi");
+                    btnChangeStatus.setText("Tìm địa chỉ giao hàng");
                     status = STATUS_DRIRECTION_CUSTOMER;
                 } else if (status == STATUS_DRIRECTION_CUSTOMER) {
-                    showDirectionResult("tran dai nghia, ha noi");
-                    btnChangeStatus.setText("Đã giao hàng");
-                    status = STATUS_DRIRECTION_DONE;
+                    showDirectionResult("linh dam, ha noi");
+                    btnChangeStatus.setText("Tìm đường đến nhà hàng");
+                    status = STATUS_DRIRECTION_RESTAURANT;
                 }
             }
         });
@@ -233,42 +233,47 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void showDirectionResult(String sEndPoint) {
-        List<Address> addressesEnd = null;
-        try {
-            addressesEnd = geocoder.getFromLocationName(sEndPoint, 1);
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        LatLng startPoint = getLatLngCurrentLocation();
+        LatLng endPoint = determineLatLngFromAddress(sEndPoint);
+
+        String url = getRequestUrl(startPoint, endPoint);
+        new TaskRequestDirections().execute(url);
+
+        mMap.clear();
+
+        mMap.addMarker(new MarkerOptions()
+                .position(endPoint));
+
+        mMap.addMarker(new MarkerOptions()
+                .position(startPoint)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_my_location)));
+
+        LatLngBounds bounds = new LatLngBounds.Builder()
+                .include(startPoint)
+                .include(endPoint)
+                .build();
+        int padding = 200;
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        mMap.animateCamera(cu);
+    }
+
+    public LatLng determineLatLngFromAddress(String strAddress) {
+        LatLng latLng = null;
+        List<Address> geoResults = new ArrayList<>();
+        while(geoResults.size()==0){
+            try {
+                geoResults = geocoder.getFromLocationName(strAddress, 1);
+            } catch (Exception e) {
+                System.out.print(e.getMessage());
+            }
+        }
+        if (geoResults.size()>0) {
+            Address addr = geoResults.get(0);
+            latLng = new LatLng(addr.getLatitude(),addr.getLongitude());
         }
 
-        if (addressesEnd.size() > 0) {
-            LatLng startPoint = getLatLngCurrentLocation();
-
-            double latEnd = addressesEnd.get(0).getLatitude();
-            double lonEnd = addressesEnd.get(0).getLongitude();
-            LatLng endPoint = new LatLng(latEnd, lonEnd);
-
-            String url = getRequestUrl(startPoint, endPoint);
-            new TaskRequestDirections().execute(url);
-
-            mMap.clear();
-
-            mMap.addMarker(new MarkerOptions()
-                    .position(endPoint)
-                    .title(addressesEnd.get(0).getAddressLine(0)));
-
-            mMap.addMarker(new MarkerOptions()
-                    .position(startPoint)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_my_location)));
-
-            LatLngBounds bounds = new LatLngBounds.Builder()
-                    .include(startPoint)
-                    .include(endPoint)
-                    .build();
-            int padding = 200;
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-            mMap.animateCamera(cu);
-
-        }
+        return latLng; //LatLng value of address
     }
 
 
@@ -276,15 +281,15 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         checkPermission();
-        //Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
 
 //        double lat = location.getLatitude();
 //        double lng = location.getLongitude();
 
-        double lat1 = 20.959800000000005;
-        double lng1 = 105.84799833333334;
+        double lat = 20.9973613;
+        double lng = 105.847837;
 
-        LatLng latLng = new LatLng(lat1,lng1);
+        LatLng latLng = new LatLng(lat,lng);
         return latLng;
     }
 

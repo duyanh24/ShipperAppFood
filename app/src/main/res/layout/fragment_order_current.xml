@@ -53,7 +53,7 @@
                 android:layout_marginTop="20dp" />
 
             <TextView
-                android:id="@+id/txtOderDetailRestau"
+                android:id="@+id/txtOderCurrentRestau"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Starbucks Hai, Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nôi."
@@ -77,7 +77,7 @@
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
-                android:id="@+id/txtOderDetailCustomer"
+                android:id="@+id/txtOderCurrentCustomer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Khu nhà ở sinh viên Pháp Vân, Tứ Hiệp, Hoàng Liệt Hoàng Mai, Hà Nội"
@@ -126,7 +126,7 @@
                         android:textStyle="bold"
                         android:textSize="18sp"
                         android:textColor="@color/colorBlack"
-                        android:text="120.000 VNĐ"/>
+                        android:text="140.000 VNĐ"/>
                     <Button
                         android:id="@+id/btnOrderCurrentDirection"
                         android:layout_width="match_parent"
@@ -136,6 +136,17 @@
                         android:layout_marginEnd="5dp"
                         android:textColor="@color/colorWhite"
                         android:background="#3F81E4"/>
+
+                    <Button
+                        android:id="@+id/btnDone"
+                        android:layout_weight="1"
+                        android:layout_marginTop="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:textColor="@color/colorWhite"
+                        android:text="Giao hàng xong"
+                        android:layout_marginEnd="5dp"
+                        android:background="#03E1FD"/>
 
                 </LinearLayout>
                 <LinearLayout
@@ -166,9 +177,20 @@
                         android:textColor="@color/colorWhite"
                         android:background="#0EEC18"
                         android:layout_marginTop="20dp"/>
+                    <Button
+                        android:id="@+id/btnCancelOrder"
+                        android:layout_weight="1"
+                        android:layout_marginTop="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:textColor="@color/colorWhite"
+                        android:text="Hủy đơn hàng"
+                        android:layout_marginStart="5dp"
+                        android:background="#CE2215"/>
                 </LinearLayout>
 
             </LinearLayout>
+
         </LinearLayout>
 
 

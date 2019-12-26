@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -20,36 +22,46 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leduyanh.shipper.R;
+import com.leduyanh.shipper.api.RetrofitClient;
 import com.leduyanh.shipper.fragment.FragmentCurrentOrder;
 import com.leduyanh.shipper.fragment.FragmentHome;
 import com.leduyanh.shipper.fragment.FragmentListOrder;
 import com.leduyanh.shipper.fragment.FragmentProfile;
-import com.leduyanh.shipper.model.Shipper;
-import com.leduyanh.shipper.model.api.RetrofitClient;
-import com.leduyanh.shipper.model.api.SOSerivce;
-
-import java.util.List;
+import com.leduyanh.shipper.model.order.Order;
+import com.leduyanh.shipper.api.SOSerivce;
+import com.leduyanh.shipper.model.order.OrderCurrent;
+import com.leduyanh.shipper.model.shipper.Shipper;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
-
     LinearLayout linearHomeListOrder,linearHome,linearHomeProfile;
     TextView txtMenuHome,txtMenuListOrder,txtMenuProfile;
-    SwipeRefreshLayout refreshLayout;
 
     FragmentManager fragmentManager = getSupportFragmentManager();
 
     SOSerivce mSoSerivce;
 
-    public static Boolean CHECK = false;
+    public static Boolean CHECK_SHOW_DIALOG = false;
+    public static Boolean CHECK_SHOW_FRAGMENT = false;
+
+    String addressStore;
+    String addressUser;
+    int orderCurrentId;
+
+    String tokenAuth;
+    int idCache;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        SharedPreferences tokenCache = HomeActivity.this.getSharedPreferences("infoShipper", Context.MODE_PRIVATE);
+        tokenAuth = tokenCache.getString("token","");
+        idCache = Integer.parseInt(tokenCache.getString("id",""));
 
         init();
         mSoSerivce = RetrofitClient.getClient().create(SOSerivce.class);
@@ -63,23 +75,15 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         linearHome.setOnClickListener(this);
         linearHomeProfile.setOnClickListener(this);
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-
-
-            }
-        });
-
+        CHECK_SHOW_DIALOG = false;
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 //Do something after 100ms
-                if(!CHECK){
+                if(!CHECK_SHOW_DIALOG){
                     callApiGetCurrentOrder();
-                    CHECK = true;
+
                 }
                 handler.postDelayed(this, 5000);
             }
@@ -93,16 +97,40 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         txtMenuHome = (TextView)findViewById(R.id.txtMenuHome);
         txtMenuListOrder = (TextView)findViewById(R.id.txtMenuListOrder);
         txtMenuProfile = (TextView)findViewById(R.id.txtMenuProfile);
-        refreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipeRefresh);
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        updateStatusShipper(1);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mSoSerivce.updateOnline(tokenAuth,idCache,0).enqueue(new Callback<Shipper>() {
+            @Override
+            public void onResponse(Call<Shipper> call, Response<Shipper> response) {
+
+            }
+            @Override
+            public void onFailure(Call<Shipper> call, Throwable t) {
+                Toast.makeText(HomeActivity.this,"Lỗi kết nối online",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.linearHome:
-                if(CHECK){
-                    FragmentCurrentOrder fragmentHome = new FragmentCurrentOrder();
-                    moveScreen(fragmentHome,"home");
+                if(CHECK_SHOW_FRAGMENT){
+                    FragmentCurrentOrder fragmentCurrentOrder = new FragmentCurrentOrder();
+                    fragmentCurrentOrder.setAddressStore(addressStore);
+                    fragmentCurrentOrder.setGetAddressUser(addressUser);
+                    fragmentCurrentOrder.setIdOrder(orderCurrentId);
+                    moveScreen(fragmentCurrentOrder,"home");
                 }else{
                     FragmentHome fragmentHome = new FragmentHome();
                     moveScreen(fragmentHome,"home");
@@ -122,77 +150,94 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void doneOrder(){
+        CHECK_SHOW_DIALOG = false;
+        CHECK_SHOW_FRAGMENT = false;
+        mSoSerivce.doneOrder().enqueue(new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+            }
 
-    public void callApiGetCurrentOrder(){
-//        Call<List<Shipper>> call = mSoSerivce.checkUser();
-//        call.enqueue(new Callback<List<Shipper>>() {
-//            @Override
-//            public void onResponse(Call<List<Shipper>> call, Response<List<Shipper>> response) {
-//                List<Shipper> user = response.body();
-//                if (user.size() != 0){
-//                    showMessageNewOrder(user.get(0).getId());
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            refreshLayout.setRefreshing(false);
-//                        }
-//                    },500);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Shipper>> call, Throwable t) {
-//                Toast.makeText(HomeActivity.this,"Lỗi kết nối",Toast.LENGTH_SHORT).show();
-//                Log.d("bug2",t.getMessage());
-//            }
-//        });
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
+            }
+        });
+        updateStatusShipper(1);
+        FragmentHome fragmentHome = new FragmentHome();
+        moveScreen(fragmentHome,"home");
     }
 
-    private void showMessageNewOrder(int id) {
+    public void logOut(){
+        SharedPreferences tokenCache = HomeActivity.this.getSharedPreferences("infoShipper", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = tokenCache.edit();
+        editor.putString("token","");
+        editor.putString("id","");
+        editor.commit();
+        CHECK_SHOW_DIALOG = true;
+        Intent intentLogout = new Intent(HomeActivity.this,LogInActivity.class);
+        startActivity(intentLogout);
+        finish();
+    }
+
+
+    public void callApiGetCurrentOrder(){
+        //SharedPreferences tokenCache = this.getSharedPreferences("infoShipper", Context.MODE_PRIVATE);
+        //String token = tokenCache.getString("token","");
+        mSoSerivce.getOrderCurrent(tokenAuth).enqueue(new Callback<OrderCurrent>() {
+            @Override
+            public void onResponse(Call<OrderCurrent> call, Response<OrderCurrent> response) {
+                OrderCurrent order = response.body();
+                if(order.getSuccess()){
+                    CHECK_SHOW_DIALOG = true;
+                    showMessageNewOrder(order);
+                }
+            }
+            @Override
+            public void onFailure(Call<OrderCurrent> call, Throwable t) {
+                Toast.makeText(HomeActivity.this,"Lỗi kết nối12",Toast.LENGTH_SHORT).show();
+                Log.d("loi",t.getMessage());
+            }
+        });
+    }
+
+    private void showMessageNewOrder(final OrderCurrent order) {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
 
         LayoutInflater inflater = this.getLayoutInflater();
         View viewDialog = inflater.inflate(R.layout.custom_dialog_receive_order,null);
         final TextView txtOrderCurrentRestau = viewDialog.findViewById(R.id.txtOderDetailRestau);
         final TextView txtOderDetailCustomer = viewDialog.findViewById(R.id.txtOderDetailCustomer);
+        final TextView txtDialogTotalPrice = viewDialog.findViewById(R.id.txtDialogTotalPrice);
 
-//        mSoSerivce.getEmployeeById(id).enqueue(new Callback<Shipper>() {
-//            @Override
-//            public void onResponse(Call<Shipper> call, Response<Shipper> response) {
-//                Shipper shipper = response.body();
-//                txtOrderCurrentRestau.setText(shipper.getEmail());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Shipper> call, Throwable t) {
-//
-//            }
-//        });
+        addressStore = order.getData().getStore().getName()+", "
+                +order.getData().getStore().getAddress();
 
-//        mSoSerivce.getEmployeeById(id).enqueue(new Callback<Shipper>() {
-//            @Override
-//            public void onResponse(Call<Shipper> call, Response<Shipper> response) {
-//                Shipper shipper = response.body();
-//                txtOderDetailCustomer.setText(shipper.getPassword());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Shipper> call, Throwable t) {
-//
-//            }
-//        });
+        addressUser = order.getData().getUser().getName()+", "
+                +order.getData().getAddress();
+        orderCurrentId = order.getData().getId();
+
+        txtOrderCurrentRestau.setText(addressStore);
+        txtOderDetailCustomer.setText(addressUser);
+        txtDialogTotalPrice.setText(String.valueOf(order.getData().getTotalPrice())+" VNĐ");
 
         builder.setView(viewDialog)
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Tôi bận rồi", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        CHECK = false;
+                        CHECK_SHOW_DIALOG = false;
+                        updateStatusOrder(0,orderCurrentId);
                     }
                 })
                 .setPositiveButton("Nhận", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        CHECK_SHOW_FRAGMENT = true;
+                        updateStatusOrder(1,orderCurrentId);
+                        updateStatusShipper(2);
                         FragmentCurrentOrder fragmentCurrentOrder = new FragmentCurrentOrder();
+                        fragmentCurrentOrder.setAddressStore(addressStore);
+                        fragmentCurrentOrder.setGetAddressUser(addressUser);
+                        fragmentCurrentOrder.setIdOrder(orderCurrentId);
                         moveScreen(fragmentCurrentOrder,"currentOrder");
                         changeColorMenu(txtMenuHome);
                     }
@@ -200,10 +245,40 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         builder.create().show();
     }
 
+    public void updateStatusOrder(int status,int orderId){
+        SharedPreferences tokenCache = HomeActivity.this.getSharedPreferences("infoShipper", Context.MODE_PRIVATE);
+        String token = tokenCache.getString("token","");
+        mSoSerivce.updateStatusOrder(token,orderId,status).enqueue(new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+            }
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
+                Toast.makeText(HomeActivity.this,"Lỗi kết nối update status Order",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void updateStatusShipper(int status){
+        SharedPreferences tokenCache = HomeActivity.this.getSharedPreferences("infoShipper", Context.MODE_PRIVATE);
+        String token = tokenCache.getString("token","");
+        int idShipper = Integer.parseInt(tokenCache.getString("id",""));
+        mSoSerivce.updateOnline(token,idShipper,status).enqueue(new Callback<Shipper>() {
+            @Override
+            public void onResponse(Call<Shipper> call, Response<Shipper> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<Shipper> call, Throwable t) {
+                Toast.makeText(HomeActivity.this,"Lỗi kết nối online",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void moveScreen(Fragment fragment,String tag){
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.frameHome,fragment,tag);
-        //fragmentTransaction.replace(R.id.frameHome,fragment);
         fragmentTransaction.commit();
     }
 

@@ -1,4 +1,4 @@
-package com.leduyanh.shipper.model;
+package com.leduyanh.shipper.model.shipper;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -10,6 +10,17 @@ public class Shipper {
 
     @SerializedName("token")
     String Token;
+
+    @SerializedName("data")
+    DataShipper data;
+
+    public DataShipper getData() {
+        return data;
+    }
+
+    public void setData(DataShipper data) {
+        this.data = data;
+    }
 
     public String getName() {
         return name;

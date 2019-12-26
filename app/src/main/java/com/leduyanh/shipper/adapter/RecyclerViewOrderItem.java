@@ -1,5 +1,6 @@
 package com.leduyanh.shipper.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -14,15 +15,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.leduyanh.shipper.activity.OrderdetailActivity;
 import com.leduyanh.shipper.R;
+import com.leduyanh.shipper.model.order.DataOrder;
 
 import java.util.List;
 
 public class RecyclerViewOrderItem extends RecyclerView.Adapter<RecyclerViewOrderItem.OderItemViewHolder> {
 
     Context mContext;
-    List<String> listOrder;
+    List<DataOrder> listOrder;
 
-    public RecyclerViewOrderItem(Context mContext, List<String> listOrder) {
+    public RecyclerViewOrderItem(Context mContext, List<DataOrder> listOrder) {
         this.mContext = mContext;
         this.listOrder = listOrder;
     }
@@ -35,13 +37,34 @@ public class RecyclerViewOrderItem extends RecyclerView.Adapter<RecyclerViewOrde
         return viewHolder;
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull OderItemViewHolder holder, final int position) {
+        holder.txtLocation.setText(listOrder.get(position).getAddress());
+        holder.txtTime.setText(listOrder.get(position).getTime());
+
+        int statusOrder = listOrder.get(position).getStatus();
+
+        if(statusOrder == 1){
+            holder.txtStatus.setText("Đang giao");
+        }else if(statusOrder == 2){
+            holder.txtStatus.setText("Đã hoàn thành");
+        }else if(statusOrder == 3){
+            holder.txtStatus.setText("Đã hủy");
+            holder.txtLocation.setTextColor(R.color.colorGray);
+        }
+
         holder.layoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(mContext.getApplicationContext(),"ms-"+position,Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext.getApplicationContext(), OrderdetailActivity.class);
+                intent.putExtra("order_id",String.valueOf(listOrder.get(position).getId()));
+                intent.putExtra("infoUser",listOrder.get(position).getUser().getName()+", "+
+                        listOrder.get(position).getAddress());
+
+                intent.putExtra("infoStore",listOrder.get(position).getStore().getName()+", "+
+                        listOrder.get(position).getStore().getAddress());
+
                 mContext.startActivity(intent);
             }
         });

@@ -87,6 +87,7 @@
                     android:text="TỔNG TIỀN"/>
 
                 <TextView
+                    android:id="@+id/txtDialogTotalPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"

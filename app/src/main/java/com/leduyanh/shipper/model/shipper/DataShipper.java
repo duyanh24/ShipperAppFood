@@ -1,8 +1,8 @@
-package com.leduyanh.shipper.model;
+package com.leduyanh.shipper.model.shipper;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Data {
+public class DataShipper {
     @SerializedName("id")
     int id;
     @SerializedName("name")

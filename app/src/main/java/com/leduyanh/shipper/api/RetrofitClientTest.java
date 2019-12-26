@@ -1,4 +1,4 @@
-package com.leduyanh.shipper.model.api;
+package com.leduyanh.shipper.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,9 +10,8 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitClient {
-    //public static final String BASE_URL ="https://ptpmcn08.azurewebsites.net/api/";
-    public static final String BASE_URL ="http://192.168.43.200:3000/api/";
+public class RetrofitClientTest {
+    public static final String BASE_URL ="http://192.168.43.200:8080/appshipper/";
     private static Retrofit retrofit = null;
 
     public static Retrofit getClient() {
