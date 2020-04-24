@@ -105,11 +105,11 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onClick(View view) {
                 if (status == STATUS_DRIRECTION_RESTAURANT) {
-                    showDirectionResult("tran dai nghia, ha noi");
+                    showDirectionResult("tran dai nghia, ha noi",1);
                     btnChangeStatus.setText("Tìm địa chỉ giao hàng");
                     status = STATUS_DRIRECTION_CUSTOMER;
                 } else if (status == STATUS_DRIRECTION_CUSTOMER) {
-                    showDirectionResult("linh dam, ha noi");
+                    showDirectionResult("linh dam, ha noi",2);
                     btnChangeStatus.setText("Tìm đường đến nhà hàng");
                     status = STATUS_DRIRECTION_RESTAURANT;
                 }
@@ -232,10 +232,10 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         return url;
     }
 
-    private void showDirectionResult(String sEndPoint) {
+    private void showDirectionResult(String sEndPoint, int idAddress) {
 
         LatLng startPoint = getLatLngCurrentLocation();
-        LatLng endPoint = determineLatLngFromAddress(sEndPoint);
+        LatLng endPoint = determineLatLngFromAddress(sEndPoint,idAddress);
 
         String url = getRequestUrl(startPoint, endPoint);
         new TaskRequestDirections().execute(url);
@@ -258,21 +258,31 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.animateCamera(cu);
     }
 
-    public LatLng determineLatLngFromAddress(String strAddress) {
-        LatLng latLng = null;
-        List<Address> geoResults = new ArrayList<>();
-        while(geoResults.size()==0){
-            try {
-                geoResults = geocoder.getFromLocationName(strAddress, 1);
-            } catch (Exception e) {
-                System.out.print(e.getMessage());
-            }
-        }
-        if (geoResults.size()>0) {
-            Address addr = geoResults.get(0);
-            latLng = new LatLng(addr.getLatitude(),addr.getLongitude());
-        }
+    public LatLng determineLatLngFromAddress(String strAddress,int idAddress) {
+//        LatLng latLng = null;
+//        List<Address> geoResults = new ArrayList<>();
+//        while(geoResults.size()==0){
+//            try {
+//                geoResults = geocoder.getFromLocationName(strAddress, 1);
+//            } catch (Exception e) {
+//                System.out.print(e.getMessage());
+//            }
+//        }
+//        if (geoResults.size()>0) {
+//            Address addr = geoResults.get(0);
+//            latLng = new LatLng(addr.getLatitude(),addr.getLongitude());
+//        }
 
+        LatLng latLng;
+        if(idAddress == 1){
+            double lat = 20.993727;
+            double lng = 105.8474363;
+            latLng = new LatLng(lat,lng);
+        }else{
+            double lat = 20.9712482;
+            double lng = 105.825606;
+            latLng = new LatLng(lat,lng);
+        }
         return latLng; //LatLng value of address
     }
 
@@ -286,8 +296,8 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
 //        double lat = location.getLatitude();
 //        double lng = location.getLongitude();
 
-        double lat = 20.9973613;
-        double lng = 105.847837;
+        double lat = 21.004026;
+        double lng = 105.8418567;
 
         LatLng latLng = new LatLng(lat,lng);
         return latLng;
